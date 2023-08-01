@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+      integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog=="
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="./style.css" />
+    <title>To-Do List App</title>
+  </head>
+  <body>
+    <!-- TITLE -->
+    <header>
+      <h1>WORKS TO BE DONE</h1>
+    </header>
+    <!-- INPUT FIELD TO ENTER TASK AND DROPDOWN FILTER -->
+    <form>
+      <input type="text" placeholder="Enter The Work" class="todo_input" />
+      <button class="todo_button" type="submit">
+        <i class="fas fa-plus-square"></i>
+      </button>
+      <div class="select">
+        <select name="todos" class="filter_todo">
+          <option value="all">All</option>
+          <option value="completed">Completed</option>
+          <option value="uncompleted">Uncompleted</option>
+        </select>
+      </div>
+    </form>
+    <!-- CONTAINER FOR DISPLAYING TO-DO LIST BY ADDING TASKS DYNAMICALLY USING JAVASCRIPT -->
+    <div class="todo_container">
+      <ul class="todo_list"></ul>
+    </div>
+    <!-- ADDING JAVA SCRIPT -->
+    <script src="./app.js"></script>
+  </body>
+</html>
+<style>
+
+    body {
+      background-image: linear-gradient(120deg, #5f57d1, #c065c0);
+      font-family: "Poppins", sans-serif;
+      color: white;
+      min-height: 100vh;
+    }
+    
+    /* STYLYING INPUT ELEMENT AND TH EBUTTON */
+    header,
+    form {
+      display: flex;
+      min-height: 15vh;
+      justify-content: center;
+      align-items: center;
+    }
+    form input,
+    form button {
+      padding: 0.4rem;
+      border: none;
+      font-size: 1.6rem;
+      background: white;
+    }
+    form button {
+      color: #c065c0;
+      background: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    form button:hover {
+      background: #c065c0;
+      color: white;
+    }
+    /* STYLING DROPDOWN */
+    select {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      outline: none;
+      border: none;
+    }
+    .select {
+      margin: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+    select {
+      color: #c065c0;
+      width: 8rem;
+      cursor: pointer;
+      padding: 0.7rem;
+    }
+    .select::after {
+      content: "\25bc";
+      position: absolute;
+      color: #c065c0;
+      top: 7px;
+      right: 6px;
+      pointer-events: none;
+    }
+    .select:hover::after {
+      color: #583429;
+    }
+    
+    /* STYLING CONTAINER WHERE THE TASKS ARE SHOWN */
+    .todo_container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .todo_list {
+      min-width: 40%;
+      list-style: none;
+    }
+    
+    .todo {
+      margin: 5px auto;
+      background: white;
+      color: #000000;
+      display: flex;
+      font-size: 1.2rem;
+      padding: 0.3rem;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.5s ease;
+    }
+    
+    .todo li {
+      flex: 1;
+    }
+    
+    /* STYLING THE BUTTONS ON THE TASKS  */
+    .complete_btn,
+    .delete_btn {
+      padding: 0.5rem;
+      background: #ff3700;
+      color: white;
+      border: none;
+      margin-left: 0.2rem;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    
+    .complete_btn {
+      background: rgb(67, 179, 67);
+    }
+    .complete_btn:active {
+      background: green;
+    }
+    
+    .delete_btn:active {
+      background: #b65337;
+    }
+    
+    .fa-trash,
+    .fa-check {
+      pointer-events: none;
+    }
+    
+    /* STYLING TASK THAT IS COMPLETED */
+    .completedItem {
+      text-decoration: line-through;
+      opacity: 0.5;
+      transform: scale(0.96);
+    }
+    /* DELETING THE TASKS */
+    .fall {
+      transform: translateY(4rem) scale(0.4) rotateZ(20deg);
+      opacity: 0;
+    }
+    </style>
+    <script>
+   //selectors
+   const todoInput = document.querySelector(".todo_input");
+   const todoButton = document.querySelector(".todo_button");
+   const todoList = document.querySelector(".todo_list");
+   const filterOption = document.querySelector(".filter_todo");
+   //event listeners
+   todoButton.addEventListener("click", addTodo);
+   todoList.addEventListener("click", deleteCheck);
+   filterOption.addEventListener("click", filterTodo);
+   //functions
+   
+   function addTodo(event) {
+     event.preventDefault();
+     //todo DIV
+     const todoDiv = document.createElement("div");
+     todoDiv.classList.add("todo");
+     //todo LI
+     const newTodo = document.createElement("li");
+     newTodo.innerText = todoInput.value;
+     newTodo.classList.add("todo_item");
+     todoDiv.appendChild(newTodo);
+     if (todoInput.value === "") {
+       return null;
+     }
+     //check mark BUTTON
+     const completedButton = document.createElement("button");
+     completedButton.innerHTML = '<i class="fas fa-check"></i>';
+     completedButton.classList.add("complete_btn");
+     todoDiv.appendChild(completedButton);
+     //delete BUTTON
+     const deleteButton = document.createElement("button");
+     deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
+     deleteButton.classList.add("delete_btn");
+     todoDiv.appendChild(deleteButton);
+     //Append to Actual LIST
+     todoList.appendChild(todoDiv);
+     //Clear todo input VALUE
+     todoInput.value = "";
+   }
+   
+   //DELETE & CHECK
+   function deleteCheck(e) {
+     const item = e.target;
+     //DELETE ITEM
+     if (item.classList[0] === "delete_btn") {
+       const todo = item.parentElement;
+       //ANIMATION TRANSITION
+       todo.classList.add("fall");
+       todo.addEventListener("transitionend", function () {
+         todo.remove();
+       });
+     }
+     //COMPLETE ITEM
+     if (item.classList[0] === "complete_btn") {
+       const todo = item.parentElement;
+       todo.classList.toggle("completedItem");
+     }
+   }
+   //FILTERING THE TASKS ACCORDING THE OPTION
+   function filterTodo(e) {
+     const todos = todoList.childNodes;
+     for (let i = 1; i < todos.length; i++) {
+       switch (e.target.value) {
+         case "all":
+           todos[i].style.display = "flex";
+           break;
+         case "completed":
+           if (todos[i].classList.contains("completedItem")) {
+             todos[i].style.display = "flex";
+           } else {
+             todos[i].style.display = "none";
+           }
+           break;
+         case "uncompleted":
+           if (!todos[i].classList.contains("completedItem")) {
+             todos[i].style.display = "flex";
+           } else {
+             todos[i].style.display = "none";
+           }
+           break;
+       }
+     }
+   }
+</script>
